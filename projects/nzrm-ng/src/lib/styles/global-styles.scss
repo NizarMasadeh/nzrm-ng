@@ -1,19 +1,34 @@
-// Variables
+// Dark Theme Variables
 :root {
-    --light-blue: #3949ab;
-    --light-text: #f5f5f5;
-    --deep-blue: #1a237e;
+    // Base colors
+    --bg-primary: #1e1e2e;
+    --bg-secondary: #282838;
+    --bg-tertiary: #313142;
+    --text-primary: #e4e4e7;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --border-color: #3f3f51;
+
+    // Brand colors
+    --brand-primary: #7b68ee;
+    --brand-secondary: #5a4fcf;
 
     // Notification colors
-    --success-color: #4CAF50;
-    --info-color: #2196F3;
-    --warn-color: #FF9800;
-    --error-color: #F44336;
+    --success-color: #4ade80;
+    --info-color: #60a5fa;
+    --warn-color: #fbbf24;
+    --error-color: #f87171;
 
     // Tooltip
-    --tooltip-bg-color: rgba(26, 35, 126, 0.9);
-    --tooltip-text-color: #fff;
-    --tooltip-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    --tooltip-bg-color: rgba(30, 30, 46, 0.95);
+    --tooltip-text-color: #e4e4e7;
+    --tooltip-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --tooltip-border: 1px solid #3f3f51;
+
+    // Shadows
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
 // Tooltip Styles
@@ -21,15 +36,20 @@
     position: absolute;
     background-color: var(--tooltip-bg-color);
     color: var(--tooltip-text-color);
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 10px 14px;
+    border-radius: 6px;
     font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
     z-index: 1000;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.2s ease, transform 0.2s ease;
     white-space: nowrap;
-    box-shadow: var(--tooltip-shadow);
+    box-shadow: var(--shadow-md);
+    border: var(--tooltip-border);
+    backdrop-filter: blur(8px);
+    transform: translate(-50%, -100%) scale(0.95);
 
     &::after {
         content: '';
@@ -43,6 +63,11 @@
         left: 50%;
         transform: translateX(-50%);
     }
+
+    &.visible {
+        opacity: 1;
+        transform: translate(-50%, -100%) scale(1);
+    }
 }
 
 // Notification Styles
@@ -50,28 +75,31 @@
     &-container {
         display: flex;
         align-items: flex-start;
-        background: var(--light-text);
+        background: var(--bg-secondary);
         border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-        width: 320px;
+        box-shadow: var(--shadow-md);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        width: 340px;
         position: relative;
         overflow: hidden;
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
     }
 
     &-icon {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         margin-right: 1rem;
+        flex-shrink: 0;
     }
 
     &-icon-symbol {
-        font-size: 1.2rem;
+        font-size: 1.25rem;
     }
 
     &-content {
@@ -83,27 +111,38 @@
         font-weight: 600;
         font-size: 1rem;
         margin-bottom: 0.25rem;
+        color: var(--text-primary);
+        letter-spacing: 0.2px;
     }
 
     &-detail {
         font-size: 0.9rem;
-        opacity: 0.8;
+        color: var(--text-secondary);
+        line-height: 1.5;
     }
 
     &-close {
         position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
+        top: 0.75rem;
+        right: 0.75rem;
         background: transparent;
         border: none;
         font-size: 1.2rem;
         cursor: pointer;
         opacity: 0.6;
-        transition: opacity 0.2s ease;
-        color: var(--deep-blue);
+        transition: all 0.2s ease;
+        color: var(--text-secondary);
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
 
         &:hover {
             opacity: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
         }
     }
 
@@ -112,17 +151,16 @@
         bottom: 0;
         left: 0;
         height: 3px;
-        background: rgba(255, 255, 255, 0.3);
         transition: width linear;
     }
 
     // Notification types
     &-success {
-        color: var(--deep-blue);
+        color: var(--text-primary);
         border-left: 4px solid var(--success-color);
 
         .notification-icon {
-            background-color: rgba(76, 175, 80, 0.1);
+            background-color: rgba(74, 222, 128, 0.15);
             color: var(--success-color);
         }
 
@@ -132,11 +170,11 @@
     }
 
     &-info {
-        color: var(--deep-blue);
+        color: var(--text-primary);
         border-left: 4px solid var(--info-color);
 
         .notification-icon {
-            background-color: rgba(33, 150, 243, 0.1);
+            background-color: rgba(96, 165, 250, 0.15);
             color: var(--info-color);
         }
 
@@ -146,11 +184,11 @@
     }
 
     &-warn {
-        color: var(--deep-blue);
+        color: var(--text-primary);
         border-left: 4px solid var(--warn-color);
 
         .notification-icon {
-            background-color: rgba(255, 152, 0, 0.1);
+            background-color: rgba(251, 191, 36, 0.15);
             color: var(--warn-color);
         }
 
@@ -160,11 +198,11 @@
     }
 
     &-error {
-        color: var(--deep-blue);
+        color: var(--text-primary);
         border-left: 4px solid var(--error-color);
 
         .notification-icon {
-            background-color: rgba(244, 67, 54, 0.1);
+            background-color: rgba(248, 113, 113, 0.15);
             color: var(--error-color);
         }
 
@@ -181,4 +219,78 @@ app-notification {
     right: 20px;
     z-index: 1200;
     display: block;
+}
+
+// Animation classes
+.fade-in {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.2s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+// Add theme toggle support
+.light-theme {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f7;
+    --bg-tertiary: #e9e9ec;
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a5a;
+    --text-muted: #71717a;
+    --border-color: #e2e2e7;
+
+    --tooltip-bg-color: rgba(40, 40, 60, 0.95);
+    --tooltip-text-color: #ffffff;
+    --tooltip-border: none;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.15);
+
+    .notification-container {
+        background: #ffffff;
+        border: 1px solid var(--border-color);
+    }
+
+    .notification-summary {
+        color: var(--text-primary);
+    }
+
+    .notification-detail {
+        color: var(--text-secondary);
+    }
+
+    .notification-close {
+        color: var(--text-secondary);
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--text-primary);
+        }
+    }
 }
