@@ -1,4 +1,3 @@
-// lib/components/theme-toggle/theme-toggle.component.ts
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../services/theme.service';
@@ -16,7 +15,6 @@ import { ThemeService } from '../../services/theme.service';
       [attr.aria-label]="'Toggle ' + (isDarkTheme ? 'light' : 'dark') + ' mode'"
     >
       <div class="theme-toggle-icon">
-        <!-- Sun icon -->
         <svg *ngIf="isDarkTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -28,7 +26,6 @@ import { ThemeService } from '../../services/theme.service';
           <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-        <!-- Moon icon -->
         <svg *ngIf="!isDarkTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
@@ -53,7 +50,6 @@ import { ThemeService } from '../../services/theme.service';
     }
     
     .theme-toggle:hover {
-      transform: translateY(-2px);
       box-shadow: var(--shadow-md);
     }
     

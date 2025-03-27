@@ -1,5 +1,4 @@
 :root {
-    // Base colors
     --bg-primary: #1e1e2e;
     --bg-secondary: #282838;
     --bg-tertiary: #313142;
@@ -8,29 +7,24 @@
     --text-muted: #71717a;
     --border-color: #3f3f51;
 
-    // Brand colors
     --brand-primary: #7b68ee;
     --brand-secondary: #5a4fcf;
 
-    // Notification colors
     --success-color: #4ade80;
     --info-color: #60a5fa;
     --warn-color: #fbbf24;
     --error-color: #f87171;
 
-    // Tooltip
     --tooltip-bg-color: rgba(30, 30, 46, 0.95);
     --tooltip-text-color: #e4e4e7;
     --tooltip-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     --tooltip-border: 1px solid #3f3f51;
 
-    // Shadows
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
-// Light Theme Variables
 .light-theme {
     --bg-primary: #ffffff;
     --bg-secondary: #f5f5f7;
@@ -57,12 +51,10 @@
     --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
-// Apply transition to all elements for smooth theme switching
 * {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-// Tooltip Styles
 .custom-tooltip {
     position: absolute;
     background-color: var(--tooltip-bg-color);
@@ -101,7 +93,6 @@
     }
 }
 
-// Notification Styles
 .notification {
     &-container {
         display: flex;
@@ -185,7 +176,6 @@
         transition: width linear;
     }
 
-    // Notification types
     &-success {
         color: var(--text-primary);
         border-left: 4px solid var(--success-color);
@@ -243,7 +233,6 @@
     }
 }
 
-// Host styles for notification component
 app-notification {
     position: fixed;
     top: 20px;
@@ -252,7 +241,6 @@ app-notification {
     display: block;
 }
 
-// Animation classes
 .fade-in {
     animation: fadeIn 0.3s ease forwards;
 }
@@ -285,7 +273,6 @@ app-notification {
     }
 }
 
-// Add theme toggle support
 .light-theme {
     --bg-primary: #ffffff;
     --bg-secondary: #f5f5f7;

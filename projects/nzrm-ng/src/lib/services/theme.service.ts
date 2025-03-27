@@ -1,4 +1,3 @@
-// lib/services/theme.service.ts
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -9,13 +8,11 @@ export class ThemeService {
     private renderer: Renderer2;
     private _isDarkTheme = new BehaviorSubject<boolean>(true);
 
-    // Observable that components can subscribe to
     public isDarkTheme$ = this._isDarkTheme.asObservable();
 
     constructor(rendererFactory: RendererFactory2) {
         this.renderer = rendererFactory.createRenderer(null, null);
 
-        // Initialize theme from localStorage if available
         const savedTheme = localStorage.getItem('isDarkTheme');
         const initialTheme = savedTheme !== null ? savedTheme === 'true' :
             window.matchMedia('(prefers-color-scheme: dark)').matches;
