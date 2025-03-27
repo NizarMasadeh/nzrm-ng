@@ -8,6 +8,11 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
+  "exports": {
+    "./themes": {
+      "sass": "./themes/your-theme.scss"
+    }
+  },
   "sideEffects": false,
   "keywords": [
     "angular",

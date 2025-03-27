@@ -1,0 +1,43 @@
+// src/lib/themes/_tooltip-theme.scss
+
+// Default Tooltip Colors
+$tooltip-background-color: rgba(26, 35, 126, 0.9);
+$tooltip-text-color: #fff;
+$tooltip-arrow-color: rgba(26, 35, 126, 0.9);
+
+// Mixin to Apply Tooltip Styles
+@mixin tooltip-styles {
+  background-color: $tooltip-background-color;
+  color: $tooltip-text-color;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  position: absolute;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid $tooltip-arrow-color;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+// Mixin to Override Tooltip Colors
+@mixin tooltip-theme($background-color, $text-color, $arrow-color) {
+  $tooltip-background-color: $background-color;
+  $tooltip-text-color: $text-color;
+  $tooltip-arrow-color: $arrow-color;
+  @include tooltip-styles;
+}
