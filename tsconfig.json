@@ -13,6 +13,11 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "paths": {
+      "nzrm-ng": [
+        "./dist/nzrm-ng"
+      ]
+    },
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
