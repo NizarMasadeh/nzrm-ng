@@ -1,0 +1,184 @@
+// Variables
+:root {
+    --light-blue: #3949ab;
+    --light-text: #f5f5f5;
+    --deep-blue: #1a237e;
+
+    // Notification colors
+    --success-color: #4CAF50;
+    --info-color: #2196F3;
+    --warn-color: #FF9800;
+    --error-color: #F44336;
+
+    // Tooltip
+    --tooltip-bg-color: rgba(26, 35, 126, 0.9);
+    --tooltip-text-color: #fff;
+    --tooltip-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+// Tooltip Styles
+.custom-tooltip {
+    position: absolute;
+    background-color: var(--tooltip-bg-color);
+    color: var(--tooltip-text-color);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+    box-shadow: var(--tooltip-shadow);
+
+    &::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid var(--tooltip-bg-color);
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+// Notification Styles
+.notification {
+    &-container {
+        display: flex;
+        align-items: flex-start;
+        background: var(--light-text);
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        width: 320px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    &-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        margin-right: 1rem;
+    }
+
+    &-icon-symbol {
+        font-size: 1.2rem;
+    }
+
+    &-content {
+        flex: 1;
+        padding-right: 1.5rem;
+    }
+
+    &-summary {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    &-detail {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    &-close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.2s ease;
+        color: var(--deep-blue);
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    &-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.3);
+        transition: width linear;
+    }
+
+    // Notification types
+    &-success {
+        color: var(--deep-blue);
+        border-left: 4px solid var(--success-color);
+
+        .notification-icon {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .notification-progress {
+            background-color: var(--success-color);
+        }
+    }
+
+    &-info {
+        color: var(--deep-blue);
+        border-left: 4px solid var(--info-color);
+
+        .notification-icon {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+        }
+
+        .notification-progress {
+            background-color: var(--info-color);
+        }
+    }
+
+    &-warn {
+        color: var(--deep-blue);
+        border-left: 4px solid var(--warn-color);
+
+        .notification-icon {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warn-color);
+        }
+
+        .notification-progress {
+            background-color: var(--warn-color);
+        }
+    }
+
+    &-error {
+        color: var(--deep-blue);
+        border-left: 4px solid var(--error-color);
+
+        .notification-icon {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--error-color);
+        }
+
+        .notification-progress {
+            background-color: var(--error-color);
+        }
+    }
+}
+
+// Host styles for notification component
+app-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1200;
+    display: block;
+}
