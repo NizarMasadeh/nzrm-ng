@@ -3,12 +3,5 @@
   "dest": "../../dist/nzrm-ng",
   "lib": {
     "entryFile": "src/public-api.ts"
-  },
-  "assets": [
-    {
-      "input": "src/lib/themes",
-      "glob": "**/*.scss",
-      "output": "themes"
-    }
-  ]
+  }
 }
