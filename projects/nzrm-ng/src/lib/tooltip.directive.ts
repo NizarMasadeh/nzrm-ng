@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 
 @Directive({
-    selector: '[appTooltip]',
+    selector: '[nTooltip]',
     standalone: true,
 })
 export class TooltipDirective implements OnInit {
