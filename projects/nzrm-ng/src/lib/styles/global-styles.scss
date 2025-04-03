@@ -55,6 +55,16 @@
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+body[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+
+    .notification-summary,
+    .notification-detail {
+        text-align: right !important;
+    }
+}
+
 .custom-tooltip {
     position: absolute;
     background-color: var(--tooltip-bg-color);
