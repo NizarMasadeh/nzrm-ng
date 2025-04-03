@@ -1,6 +1,6 @@
 {
   "name": "nzrm-ng",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "peerDependencies": {
     "@angular/common": "^19.0.0",
     "@angular/core": "^19.0.0"
@@ -13,7 +13,8 @@
     "angular",
     "tooltip",
     "directive",
-    "nzrm-ng"
+    "nzrm-ng",
+    "confirm dialog"
   ],
   "repository": {
     "type": "git",
