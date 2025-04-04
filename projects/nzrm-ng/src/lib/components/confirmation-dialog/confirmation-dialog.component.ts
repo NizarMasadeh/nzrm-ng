@@ -5,12 +5,14 @@ import {
   HostListener,
   ChangeDetectorRef,
   ViewEncapsulation,
+  Inject,
 } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { Subscription } from "rxjs"
 import { trigger, transition, style, animate, AnimationEvent } from "@angular/animations"
 import { ConfirmationDialogService } from "./confirmation-dialog.service"
 import { ConfirmationDialogConfig, DialogSeverity } from "./confirmation-dialog.model"
+import { DOCUMENT } from "@angular/common"
 
 @Component({
   selector: "n-confirmation-dialog",
@@ -42,11 +44,12 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
   visible = false
   config: ConfirmationDialogConfig | null = null
   private subscription: Subscription = new Subscription()
-  private animationInProgress = false
+  private animationInProgress = false;
 
   constructor(
     private dialogService: ConfirmationDialogService,
     private cdr: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document
   ) { }
 
   ngOnInit(): void {
@@ -54,12 +57,20 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
       this.dialogService.dialog$.subscribe((config) => {
         this.config = config
         this.visible = !!config
+
+        if (this.visible) {
+          this.disableBodyScroll()
+        } else {
+          this.enableBodyScroll()
+        }
+
         this.cdr.detectChanges()
       }),
     )
   }
 
   ngOnDestroy(): void {
+    this.enableBodyScroll()
     this.subscription.unsubscribe()
   }
 
@@ -104,6 +115,17 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
 
   onAnimationDone(event: AnimationEvent): void {
     this.animationInProgress = false
+  }
+
+  private disableBodyScroll(): void {
+    const scrollbarWidth = window.innerWidth - this.document.documentElement.clientWidth
+    this.document.body.style.overflow = "hidden"
+    this.document.body.style.paddingRight = `${scrollbarWidth}px`
+  }
+
+  private enableBodyScroll(): void {
+    this.document.body.style.overflow = ""
+    this.document.body.style.paddingRight = ""
   }
 }
 
