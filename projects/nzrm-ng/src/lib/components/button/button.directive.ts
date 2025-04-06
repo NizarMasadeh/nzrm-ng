@@ -209,7 +209,6 @@ export class ButtonDirective implements OnInit {
         this.renderer.setStyle(this.el.nativeElement, 'border', `1px solid ${borderColor}`);
         this.renderer.setStyle(this.el.nativeElement, 'color', textColor);
 
-        // Update hover effect for outlined buttons
         this.renderer.listen(this.el.nativeElement, 'mouseenter', () => {
             if (!this.disabled) {
                 this.renderer.setStyle(this.el.nativeElement, 'background-color', hoverBgColor);
@@ -248,7 +247,15 @@ export class ButtonDirective implements OnInit {
 
     private addIcon(): void {
         const iconElement = this.renderer.createElement('i');
-        this.renderer.addClass(iconElement, this.icon);
+
+        if (this.icon) {
+            const iconClasses = this.icon.split(' ');
+            iconClasses.forEach(className => {
+                if (className) {
+                    this.renderer.addClass(iconElement, className);
+                }
+            });
+        }
 
         if (this.iconPos === 'left') {
             this.renderer.setStyle(iconElement, 'margin-right', '0.5rem');
@@ -260,7 +267,6 @@ export class ButtonDirective implements OnInit {
     }
 
     private applyLoadingState(): void {
-        // Create spinner element
         const spinner = this.renderer.createElement('span');
         this.renderer.addClass(spinner, 'n-button-spinner');
 
