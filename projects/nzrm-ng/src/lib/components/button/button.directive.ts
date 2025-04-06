@@ -39,13 +39,13 @@ export class ButtonDirective implements OnInit {
             this.applyDisabledStyles();
         }
 
-        if (this.label) {
-            this.addLabel();
+        const isIconOnly = this.icon && !this.label;
+
+        if (isIconOnly) {
+            this.applyIconOnlyStyles();
         }
 
-        if (this.icon) {
-            this.addIcon();
-        }
+        this.addButtonContent();
 
         if (this.loading) {
             this.applyLoadingState();
@@ -233,19 +233,51 @@ export class ButtonDirective implements OnInit {
         this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'none');
     }
 
-    private addLabel(): void {
-        const span = this.renderer.createElement('span');
-        const text = this.renderer.createText(this.label);
-        this.renderer.appendChild(span, text);
+    private applyIconOnlyStyles(): void {
+        const size = this.getIconOnlySize();
 
+        this.renderer.setStyle(this.el.nativeElement, 'width', size);
+        this.renderer.setStyle(this.el.nativeElement, 'padding', '0');
+        this.renderer.setStyle(this.el.nativeElement, 'justify-content', 'center');
+        this.renderer.setStyle(this.el.nativeElement, 'align-items', 'center');
+
+        if (this.rounded) {
+            this.renderer.setStyle(this.el.nativeElement, 'border-radius', '50%');
+        }
+    }
+
+    private getIconOnlySize(): string {
+        switch (this.size) {
+            case 'sm': return '32px';
+            case 'lg': return '48px';
+            case 'md':
+            default: return '40px';
+        }
+    }
+
+    private addButtonContent(): void {
         while (this.el.nativeElement.firstChild) {
             this.renderer.removeChild(this.el.nativeElement, this.el.nativeElement.firstChild);
         }
 
-        this.renderer.appendChild(this.el.nativeElement, span);
+        const isIconOnly = this.icon && !this.label;
+
+        if (isIconOnly) {
+            this.addIconElement();
+        } else if (this.icon && this.label) {
+            if (this.iconPos === 'left') {
+                this.addIconElement();
+                this.addLabelElement();
+            } else {
+                this.addLabelElement();
+                this.addIconElement();
+            }
+        } else if (this.label) {
+            this.addLabelElement();
+        }
     }
 
-    private addIcon(): void {
+    private addIconElement(): void {
         const iconElement = this.renderer.createElement('i');
 
         if (this.icon) {
@@ -257,13 +289,32 @@ export class ButtonDirective implements OnInit {
             });
         }
 
-        if (this.iconPos === 'left') {
-            this.renderer.setStyle(iconElement, 'margin-right', '0.5rem');
-            this.renderer.insertBefore(this.el.nativeElement, iconElement, this.el.nativeElement.firstChild);
-        } else {
-            this.renderer.setStyle(iconElement, 'margin-left', '0.5rem');
-            this.renderer.appendChild(this.el.nativeElement, iconElement);
+        let iconSize: string;
+        switch (this.size) {
+            case 'sm': iconSize = '0.875rem'; break;
+            case 'lg': iconSize = '1.25rem'; break;
+            case 'md':
+            default: iconSize = '1rem';
         }
+
+        this.renderer.setStyle(iconElement, 'font-size', iconSize);
+
+        if (this.label) {
+            if (this.iconPos === 'left') {
+                this.renderer.setStyle(iconElement, 'margin-right', '0.5rem');
+            } else {
+                this.renderer.setStyle(iconElement, 'margin-left', '0.5rem');
+            }
+        }
+
+        this.renderer.appendChild(this.el.nativeElement, iconElement);
+    }
+
+    private addLabelElement(): void {
+        const span = this.renderer.createElement('span');
+        const text = this.renderer.createText(this.label);
+        this.renderer.appendChild(span, text);
+        this.renderer.appendChild(this.el.nativeElement, span);
     }
 
     private applyLoadingState(): void {
@@ -275,8 +326,11 @@ export class ButtonDirective implements OnInit {
         this.renderer.setStyle(spinner, 'border-radius', '50%');
         this.renderer.setStyle(spinner, 'border', '2px solid currentColor');
         this.renderer.setStyle(spinner, 'border-right-color', 'transparent');
-        this.renderer.setStyle(spinner, 'margin-right', '0.5rem');
         this.renderer.setStyle(spinner, 'animation', 'n-button-spin 0.75s linear infinite');
+
+        if (this.label) {
+            this.renderer.setStyle(spinner, 'margin-right', '0.5rem');
+        }
 
         if (!document.getElementById('n-button-spinner-style')) {
             const style = this.renderer.createElement('style');
