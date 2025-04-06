@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
 
 type ButtonSeverity = 'primary' | 'secondary' | 'success' | 'info' | 'warn' | 'error';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -17,6 +17,14 @@ export class ButtonDirective implements OnInit {
     @Input() icon: string = '';
     @Input() iconPos: 'left' | 'right' = 'left';
     @Input() loading: boolean = false;
+    @Input() ripple: boolean = true;
+
+    @HostListener('click', ['$event'])
+    onClick(event: MouseEvent): void {
+        if (this.disabled || !this.ripple) return;
+
+        this.createRippleEffect(event);
+    }
 
     constructor(private el: ElementRef, private renderer: Renderer2) { }
 
@@ -49,6 +57,59 @@ export class ButtonDirective implements OnInit {
 
         if (this.loading) {
             this.applyLoadingState();
+        }
+
+        this.addRippleStyles();
+    }
+
+    private createRippleEffect(event: MouseEvent): void {
+        const ripple = this.renderer.createElement('span');
+        this.renderer.addClass(ripple, 'n-button-ripple');
+
+        const rect = this.el.nativeElement.getBoundingClientRect();
+
+        const size = Math.max(rect.width, rect.height) * 2;
+
+        this.renderer.setStyle(ripple, 'width', `${size}px`);
+        this.renderer.setStyle(ripple, 'height', `${size}px`);
+
+        const x = event.clientX - rect.left - (size / 2);
+        const y = event.clientY - rect.top - (size / 2);
+        this.renderer.setStyle(ripple, 'left', `${x}px`);
+        this.renderer.setStyle(ripple, 'top', `${y}px`);
+
+        this.renderer.appendChild(this.el.nativeElement, ripple);
+
+        setTimeout(() => {
+            if (this.el.nativeElement.contains(ripple)) {
+                this.renderer.removeChild(this.el.nativeElement, ripple);
+            }
+        }, 600);
+    }
+
+    private addRippleStyles(): void {
+        if (!document.getElementById('n-button-ripple-style')) {
+            const style = this.renderer.createElement('style');
+            style.id = 'n-button-ripple-style';
+            const css = `
+                .n-button-ripple {
+                    position: absolute;
+                    border-radius: 50%;
+                    background-color: rgba(255, 255, 255, 0.4);
+                    transform: scale(0);
+                    animation: n-button-ripple-animation 0.6s ease-out;
+                    pointer-events: none;
+                }
+                
+                @keyframes n-button-ripple-animation {
+                    to {
+                        transform: scale(2);
+                        opacity: 0;
+                    }
+                }
+            `;
+            this.renderer.appendChild(style, this.renderer.createText(css));
+            this.renderer.appendChild(document.head, style);
         }
     }
 
