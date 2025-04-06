@@ -1,6 +1,6 @@
 {
   "name": "nzrm-ng",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "peerDependencies": {
     "@angular/common": "^19.0.0",
     "@angular/core": "^19.0.0"
@@ -14,10 +14,12 @@
     "Tooltip",
     "Directive",
     "nzrm-ng",
-    "Confirm dialog",
-    "Message dialog",
+    "Confirm Dialog",
+    "Message Dialog",
     "Button",
-    "Input Text"
+    "Input Text",
+    "Themes",
+    "Dark Mode"
   ],
   "repository": {
     "type": "git",
