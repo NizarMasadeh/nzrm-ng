@@ -30,5 +30,9 @@ export * from './lib/components/message-dialog/message-dialog.model';
 export * from './lib/components/button/button.module';
 export * from './lib/components/button/button.directive';
 
+/***INPUT TEXT****/
+export * from './lib/components/input-text/input-text.directive';
+export * from './lib/components/input-text/input-text.module';
+
 /****STYLES****/
 export * from './lib/styles/styles.module';
