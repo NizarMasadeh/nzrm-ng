@@ -4,6 +4,7 @@
 
 /****TOOLTIP****/
 export * from './lib/components/tooltip/tooltip.directive';
+export * from './lib/components/tooltip/tooltip.module';
 
 /*****NOTIFICATION****/
 export * from './lib/components/notification/notification.component';
@@ -24,6 +25,10 @@ export * from './lib/components/confirmation-dialog/confirmation-dialog.model';
 export * from './lib/components/message-dialog/message-dialog.component';
 export * from './lib/components/message-dialog/message-dialog.service';
 export * from './lib/components/message-dialog/message-dialog.model';
+
+/****BUTTON****/
+export * from './lib/components/button/button.module';
+export * from './lib/components/button/button.directive';
 
 /****STYLES****/
 export * from './lib/styles/styles.module';
