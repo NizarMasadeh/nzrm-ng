@@ -79,7 +79,6 @@ body[dir="rtl"] {
     z-index: 1000;
     pointer-events: none;
     opacity: 0;
-    display: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
     white-space: nowrap;
     box-shadow: var(--shadow-md);
