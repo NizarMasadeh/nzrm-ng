@@ -10,12 +10,14 @@
   },
   "sideEffects": false,
   "keywords": [
-    "angular",
-    "tooltip",
-    "directive",
+    "Angular",
+    "Tooltip",
+    "Directive",
     "nzrm-ng",
-    "confirm dialog",
-    "message dialog"
+    "Confirm dialog",
+    "Message dialog",
+    "Button",
+    "Input Text"
   ],
   "repository": {
     "type": "git",
