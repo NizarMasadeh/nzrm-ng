@@ -69,7 +69,6 @@ export class TooltipDirective implements OnInit {
     onMouseLeave(): void {
         if (this.tooltipElement) {
             this.renderer.setStyle(this.tooltipElement, 'opacity', '0');
-            this.renderer.setStyle(this.tooltipElement, 'display', 'none'); 
         }
     }
 
