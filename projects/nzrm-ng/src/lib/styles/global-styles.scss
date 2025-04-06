@@ -99,11 +99,6 @@ body[dir="rtl"] {
         left: 50%;
         transform: translateX(-50%);
     }
-
-    &.visible {
-        opacity: 1;
-        transform: translate(-50%, -100%) scale(1);
-    }
 }
 
 .notification {
