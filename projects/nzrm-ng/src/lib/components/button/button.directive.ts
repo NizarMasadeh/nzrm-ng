@@ -238,8 +238,6 @@ export class ButtonDirective implements OnInit {
 
         this.renderer.setStyle(this.el.nativeElement, 'width', size);
         this.renderer.setStyle(this.el.nativeElement, 'padding', '0');
-        this.renderer.setStyle(this.el.nativeElement, 'justify-content', 'center');
-        this.renderer.setStyle(this.el.nativeElement, 'align-items', 'center');
 
         if (this.rounded) {
             this.renderer.setStyle(this.el.nativeElement, 'border-radius', '50%');
@@ -260,24 +258,37 @@ export class ButtonDirective implements OnInit {
             this.renderer.removeChild(this.el.nativeElement, this.el.nativeElement.firstChild);
         }
 
-        const isIconOnly = this.icon && !this.label;
+        const container = this.renderer.createElement('div');
+        this.renderer.setStyle(container, 'display', 'flex');
+        this.renderer.setStyle(container, 'align-items', 'center');
+        this.renderer.setStyle(container, 'justify-content', 'center');
+        this.renderer.setStyle(container, 'width', '100%');
+        this.renderer.setStyle(container, 'height', '100%');
 
-        if (isIconOnly) {
-            this.addIconElement();
-        } else if (this.icon && this.label) {
+        if (this.icon && this.label) {
             if (this.iconPos === 'left') {
-                this.addIconElement();
-                this.addLabelElement();
+                const iconEl = this.createIconElement(true);
+                const labelEl = this.createLabelElement();
+                this.renderer.appendChild(container, iconEl);
+                this.renderer.appendChild(container, labelEl);
             } else {
-                this.addLabelElement();
-                this.addIconElement();
+                const labelEl = this.createLabelElement();
+                const iconEl = this.createIconElement(false);
+                this.renderer.appendChild(container, labelEl);
+                this.renderer.appendChild(container, iconEl);
             }
+        } else if (this.icon) {
+            const iconEl = this.createIconElement(false);
+            this.renderer.appendChild(container, iconEl);
         } else if (this.label) {
-            this.addLabelElement();
+            const labelEl = this.createLabelElement();
+            this.renderer.appendChild(container, labelEl);
         }
+
+        this.renderer.appendChild(this.el.nativeElement, container);
     }
 
-    private addIconElement(): void {
+    private createIconElement(isLeftIcon: boolean): HTMLElement {
         const iconElement = this.renderer.createElement('i');
 
         if (this.icon) {
@@ -300,21 +311,21 @@ export class ButtonDirective implements OnInit {
         this.renderer.setStyle(iconElement, 'font-size', iconSize);
 
         if (this.label) {
-            if (this.iconPos === 'left') {
+            if (isLeftIcon) {
                 this.renderer.setStyle(iconElement, 'margin-right', '0.5rem');
             } else {
                 this.renderer.setStyle(iconElement, 'margin-left', '0.5rem');
             }
         }
 
-        this.renderer.appendChild(this.el.nativeElement, iconElement);
+        return iconElement;
     }
 
-    private addLabelElement(): void {
+    private createLabelElement(): HTMLElement {
         const span = this.renderer.createElement('span');
         const text = this.renderer.createText(this.label);
         this.renderer.appendChild(span, text);
-        this.renderer.appendChild(this.el.nativeElement, span);
+        return span;
     }
 
     private applyLoadingState(): void {
@@ -344,7 +355,12 @@ export class ButtonDirective implements OnInit {
             this.renderer.appendChild(document.head, style);
         }
 
-        this.renderer.insertBefore(this.el.nativeElement, spinner, this.el.nativeElement.firstChild);
+        const container = this.el.nativeElement.firstChild;
+        if (container) {
+            this.renderer.insertBefore(container, spinner, container.firstChild);
+        } else {
+            this.renderer.appendChild(this.el.nativeElement, spinner);
+        }
 
         this.renderer.setProperty(this.el.nativeElement, 'disabled', true);
         this.renderer.setStyle(this.el.nativeElement, 'cursor', 'wait');
