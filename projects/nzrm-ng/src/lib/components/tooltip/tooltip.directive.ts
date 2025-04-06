@@ -30,9 +30,10 @@ export class TooltipDirective implements OnInit {
         this.renderer.appendChild(this.tooltipElement, textNode)
 
         const rect = this.el.nativeElement.getBoundingClientRect()
-        this.renderer.setStyle(this.tooltipElement, "top", `${rect.top + window.scrollY - 10}px`)
-        this.renderer.setStyle(this.tooltipElement, "left", `${rect.left + window.scrollX + rect.width / 2}px`)
-        this.renderer.setStyle(this.tooltipElement, "transform", "translate(-50%, -100%)")
+        this.renderer.setStyle(this.tooltipElement, "top", `${rect.top + window.scrollY - 10}px`);
+        this.renderer.setStyle(this.tooltipElement, "left", `${rect.left + window.scrollX + rect.width / 2}px`);
+        this.renderer.setStyle(this.tooltipElement, "transform", "translate(-50%, -100%)");
+        this.renderer.setStyle(this.tooltipElement, "display", "none");
 
         this.renderer.appendChild(document.body, this.tooltipElement)
     }
@@ -60,6 +61,7 @@ export class TooltipDirective implements OnInit {
             'translate(-50%, -100%)'
         );
         this.renderer.setStyle(this.tooltipElement, 'opacity', '1');
+        this.renderer.setStyle(this.tooltipElement, 'display', 'block');
     }
 
     @HostListener('mouseleave')
@@ -67,6 +69,7 @@ export class TooltipDirective implements OnInit {
     onMouseLeave(): void {
         if (this.tooltipElement) {
             this.renderer.setStyle(this.tooltipElement, 'opacity', '0');
+            this.renderer.setStyle(this.tooltipElement, 'display', 'none'); 
         }
     }
 
