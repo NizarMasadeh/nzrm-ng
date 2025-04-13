@@ -190,7 +190,7 @@ export class InputTextDirective implements OnInit {
         });
 
         const inputStyles = {
-            'width': '100%',
+            // 'width': '100%',
             'font-family': 'Inter, sans-serif',
             'background-color': 'var(--bg-secondary)',
             'color': 'var(--text-primary)',
