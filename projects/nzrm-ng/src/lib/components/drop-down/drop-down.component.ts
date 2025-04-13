@@ -612,7 +612,6 @@ export class DropdownComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
   
         .n-dropdown-filter {
-            width: 100% !important;
             padding: 0.625rem 0.875rem !important;
             border: 1px solid var(--border-color) !important;
             border-radius: 4px !important;
