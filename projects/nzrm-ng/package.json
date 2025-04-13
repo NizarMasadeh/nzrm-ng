@@ -1,6 +1,6 @@
 {
   "name": "nzrm-ng",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "peerDependencies": {
     "@angular/common": "^19.0.0",
     "@angular/core": "^19.0.0"
@@ -18,6 +18,9 @@
     "Message Dialog",
     "Button",
     "Input Text",
+    "Dropdown",
+    "Drop down list",
+    "Multiselect",
     "Themes",
     "Dark Mode"
   ],

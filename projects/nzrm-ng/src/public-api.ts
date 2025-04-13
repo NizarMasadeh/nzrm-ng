@@ -34,5 +34,11 @@ export * from './lib/components/button/button.directive';
 export * from './lib/components/input-text/input-text.directive';
 export * from './lib/components/input-text/input-text.module';
 
+/****DROPDOWN*****/
+export * from './lib/components/drop-down/drop-down.module';
+export * from './lib/components/drop-down/drop-down.directive';
+export * from './lib/components/drop-down/drop-down.component';
+export * from './lib/components/drop-down/drop-down.service';
+
 /****STYLES****/
 export * from './lib/styles/styles.module';
