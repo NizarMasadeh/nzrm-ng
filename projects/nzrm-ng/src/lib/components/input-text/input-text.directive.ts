@@ -180,7 +180,7 @@ export class InputTextDirective implements OnInit {
             'position': 'relative',
             'display': 'inline-flex',
             'align-items': 'center',
-            // 'width': '100%',
+            'width': 'fit-content%',
             'font-family': 'Inter, sans-serif',
             'transition': 'all 0.2s ease',
         };
@@ -199,6 +199,8 @@ export class InputTextDirective implements OnInit {
             'transition': 'all 0.2s ease',
             'outline': 'none',
             'box-sizing': 'border-box',
+            'max-width': 'fit-content',
+            'min-width': '200px'
         };
 
         Object.entries(inputStyles).forEach(([property, value]) => {
