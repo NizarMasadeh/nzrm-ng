@@ -180,7 +180,7 @@ export class InputTextDirective implements OnInit {
             'position': 'relative',
             'display': 'inline-flex',
             'align-items': 'center',
-            'width': '100%',
+            // 'width': '100%',
             'font-family': 'Inter, sans-serif',
             'transition': 'all 0.2s ease',
         };
