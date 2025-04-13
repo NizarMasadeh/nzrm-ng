@@ -41,18 +41,20 @@ import { AnimationEvent } from '@angular/animations';
   animations: [
     trigger('dropdownAnimation', [
       state('void', style({
-        transform: 'translateY(-10px)',
-        opacity: 0
+        opacity: 0,
+        transform: 'translateY(-10px)'
       })),
       state('visible', style({
-        transform: 'translateY(0)',
-        opacity: 1
+        opacity: 1,
+        transform: 'translateY(0)'
       })),
       transition('void => visible', [
+        style({ opacity: 0, transform: 'translateY(-10px)' }),
         animate('200ms cubic-bezier(0.4, 0.0, 0.2, 1)')
       ]),
       transition('visible => void', [
-        animate('150ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+        animate('200ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+          style({ opacity: 0, transform: 'translateY(-10px)' }))
       ])
     ]),
     trigger('ripple', [
@@ -235,9 +237,7 @@ export class DropdownComponent implements OnInit, OnDestroy, OnChanges, ControlV
   hideDropdown() {
     if (!this.isOpen || this.isAnimating) return;
 
-    this.dropdownManager.closeDropdown(this.uniqueId);
     this.isOpen = false;
-
     if (this.documentClickListener) {
       this.documentClickListener();
       this.documentClickListener = null;
@@ -250,6 +250,9 @@ export class DropdownComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     this.onHide.emit();
     this.onTouched();
+    this.dropdownManager.closeDropdown(this.uniqueId);
+
+    this.cd.markForCheck();
   }
 
   onDocumentClick = (event: MouseEvent) => {
@@ -478,7 +481,6 @@ export class DropdownComponent implements OnInit, OnDestroy, OnChanges, ControlV
           display: none !important;
           flex-direction: column !important;
           will-change: transform, opacity !important;
-          transition: opacity ${this.animationDuration}ms ease !important, transform ${this.animationDuration}ms ease !important;
         }
   
         .n-dropdown-trigger {
@@ -811,15 +813,11 @@ export class DropdownComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
   onAnimationStart(event: AnimationEvent) {
     this.isAnimating = true;
+    this.cd.detectChanges();
   }
 
   onAnimationDone(event: AnimationEvent) {
     this.isAnimating = false;
-    
-    if (event.toState === 'void') {
-      this.isOpen = false;
-      const panel = this.dropdownPanel.nativeElement;
-      this.renderer.setStyle(panel, 'display', 'none');
-    }
+    this.cd.detectChanges();
   }
 }
