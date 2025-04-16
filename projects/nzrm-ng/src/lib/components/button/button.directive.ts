@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnInit, OnChanges, SimpleChanges, Renderer2 } from '@angular/core';
 
 type ButtonSeverity = 'primary' | 'secondary' | 'success' | 'info' | 'warn' | 'error';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -7,7 +7,7 @@ type ButtonSize = 'sm' | 'md' | 'lg';
     selector: '[nButton]',
     standalone: true,
 })
-export class ButtonDirective implements OnInit {
+export class ButtonDirective implements OnInit, OnChanges {
     @Input() severity: ButtonSeverity = 'primary';
     @Input() size: ButtonSize = 'md';
     @Input() label: string = '';
@@ -18,6 +18,9 @@ export class ButtonDirective implements OnInit {
     @Input() iconPos: 'left' | 'right' = 'left';
     @Input() loading: boolean = false;
     @Input() ripple: boolean = true;
+
+    private loadingSpinner: HTMLElement | null = null;
+    private initialMinWidth: string | null = null;
 
     @HostListener('click', ['$event'])
     onClick(event: MouseEvent): void {
@@ -30,10 +33,10 @@ export class ButtonDirective implements OnInit {
 
     ngOnInit(): void {
         this.applyBaseStyles();
-
         this.applySeverityStyles();
-
         this.applySizeStyles();
+
+        this.initialMinWidth = this.getMinWidth();
 
         if (this.outlined) {
             this.applyOutlinedStyles();
@@ -60,6 +63,16 @@ export class ButtonDirective implements OnInit {
         }
 
         this.addRippleStyles();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['loading']) {
+            if (changes['loading'].currentValue) {
+                this.applyLoadingState();
+            } else {
+                this.removeLoadingState();
+            }
+        }
     }
 
     private createRippleEffect(event: MouseEvent): void {
@@ -122,18 +135,28 @@ export class ButtonDirective implements OnInit {
             'font-weight': '500',
             'border': 'none',
             'cursor': 'pointer',
-            'transition': 'all 0.2s ease',
+            'transition': 'background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, width 0.2s ease, padding 0.2s ease, min-width 0.2s ease',
             'position': 'relative',
             'overflow': 'hidden',
             'box-shadow': 'var(--shadow-sm)',
             'text-transform': 'none',
             'letter-spacing': '0.3px',
             'border-radius': '6px',
+            'min-width': this.getMinWidth(),
         };
 
         Object.entries(styles).forEach(([property, value]) => {
             this.renderer.setStyle(this.el.nativeElement, property, value);
         });
+    }
+
+    private getMinWidth(): string {
+        switch (this.size) {
+            case 'sm': return '80px';
+            case 'lg': return '120px';
+            case 'md':
+            default: return '100px';
+        }
     }
 
     private applySeverityStyles(): void {
@@ -298,6 +321,7 @@ export class ButtonDirective implements OnInit {
         const size = this.getIconOnlySize();
 
         this.renderer.setStyle(this.el.nativeElement, 'width', size);
+        this.renderer.setStyle(this.el.nativeElement, 'min-width', size);
         this.renderer.setStyle(this.el.nativeElement, 'padding', '0');
 
         if (this.rounded) {
@@ -325,6 +349,7 @@ export class ButtonDirective implements OnInit {
         this.renderer.setStyle(container, 'justify-content', 'center');
         this.renderer.setStyle(container, 'width', '100%');
         this.renderer.setStyle(container, 'height', '100%');
+        this.renderer.setStyle(container, 'transition', 'all 0.2s ease-in-out');
 
         if (this.icon && this.label) {
             if (this.iconPos === 'left') {
@@ -389,6 +414,23 @@ export class ButtonDirective implements OnInit {
         return span;
     }
 
+    private removeLoadingState(): void {
+        if (this.loadingSpinner && this.el.nativeElement.contains(this.loadingSpinner)) {
+            this.renderer.setStyle(this.loadingSpinner, 'opacity', '0');
+            const spinner = this.loadingSpinner;
+            setTimeout(() => {
+                if (this.el.nativeElement.contains(spinner)) {
+                    this.renderer.removeChild(this.el.nativeElement.firstChild, spinner);
+                }
+            }, 200);
+        }
+
+        this.loadingSpinner = null;
+        this.renderer.removeAttribute(this.el.nativeElement, 'disabled');
+        this.renderer.setStyle(this.el.nativeElement, 'cursor', 'pointer');
+        this.renderer.setStyle(this.el.nativeElement, 'min-width', this.initialMinWidth);
+    }
+
     private applyLoadingState(): void {
         const spinner = this.renderer.createElement('span');
         this.renderer.addClass(spinner, 'n-button-spinner');
@@ -399,6 +441,8 @@ export class ButtonDirective implements OnInit {
         this.renderer.setStyle(spinner, 'border', '2px solid currentColor');
         this.renderer.setStyle(spinner, 'border-right-color', 'transparent');
         this.renderer.setStyle(spinner, 'animation', 'n-button-spin 0.75s linear infinite');
+        this.renderer.setStyle(spinner, 'opacity', '0');
+        this.renderer.setStyle(spinner, 'position', 'relative');
 
         if (this.label) {
             this.renderer.setStyle(spinner, 'margin-right', '0.5rem');
@@ -408,10 +452,14 @@ export class ButtonDirective implements OnInit {
             const style = this.renderer.createElement('style');
             style.id = 'n-button-spinner-style';
             const css = `
-        @keyframes n-button-spin {
-          to { transform: rotate(360deg); }
-        }
-      `;
+                @keyframes n-button-spin {
+                    to { transform: rotate(360deg); }
+                }
+                .n-button-spinner {
+                    opacity: 1 !important;
+                    transition: opacity 0.2s ease-in-out;
+                }
+            `;
             this.renderer.appendChild(style, this.renderer.createText(css));
             this.renderer.appendChild(document.head, style);
         }
@@ -423,6 +471,10 @@ export class ButtonDirective implements OnInit {
             this.renderer.appendChild(this.el.nativeElement, spinner);
         }
 
+        spinner.offsetHeight;
+        this.renderer.setStyle(spinner, 'opacity', '1');
+
+        this.loadingSpinner = spinner;
         this.renderer.setProperty(this.el.nativeElement, 'disabled', true);
         this.renderer.setStyle(this.el.nativeElement, 'cursor', 'wait');
     }
