@@ -82,24 +82,22 @@ body[dir="rtl"] {
     }
 }
 
-.custom-tooltip {
+.n-tooltip {
     position: absolute;
-    background-color: var(--tooltip-bg-color);
-    color: var(--tooltip-text-color);
-    padding: 10px 14px;
+    background-color: var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
+    color: var(--tooltip-text-color, #ffffff);
     border-radius: 6px;
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.2px;
     z-index: 1000;
-    pointer-events: none;
     opacity: 0;
+    transform: scale(0.95);
     transition: opacity 0.2s ease, transform 0.2s ease;
-    white-space: nowrap;
-    box-shadow: var(--shadow-md);
-    border: var(--tooltip-border);
-    backdrop-filter: blur(8px);
-    transform: translate(-50%, -100%) scale(0.95);
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(0, 0, 0, 0.4));
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    max-width: 250px;
 
     &::after {
         content: '';
@@ -107,12 +105,187 @@ body[dir="rtl"] {
         display: block;
         width: 0;
         height: 0;
+    }
+
+    &.n-tooltip-visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .n-tooltip-content {
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .n-tooltip-text {
+        line-height: 1.4;
+    }
+
+    .n-tooltip-icon {
+        display: inline-flex;
+        font-size: 16px;
+    }
+}
+
+.n-tooltip-top {
+    transform-origin: bottom center;
+
+    &::after {
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-top: 6px solid var(--tooltip-bg-color);
+        border-top: 6px solid var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
         bottom: -6px;
         left: 50%;
         transform: translateX(-50%);
+    }
+}
+
+.n-tooltip-right {
+    transform-origin: left center;
+
+    &::after {
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-right: 6px solid var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
+        left: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.n-tooltip-bottom {
+    transform-origin: top center;
+
+    &::after {
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+.n-tooltip-left {
+    transform-origin: right center;
+
+    &::after {
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 6px solid var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
+        right: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.n-tooltip-info {
+    --tooltip-bg-color: rgba(33, 150, 243, 0.95);
+
+    &::after {
+        border-top-color: rgba(33, 150, 243, 0.95);
+    }
+
+    &.n-tooltip-right::after {
+        border-top-color: transparent;
+        border-right-color: rgba(33, 150, 243, 0.95);
+    }
+
+    &.n-tooltip-bottom::after {
+        border-top-color: transparent;
+        border-bottom-color: rgba(33, 150, 243, 0.95);
+    }
+
+    &.n-tooltip-left::after {
+        border-top-color: transparent;
+        border-left-color: rgba(33, 150, 243, 0.95);
+    }
+
+    .n-tooltip-icon {
+        color: rgba(255, 255, 255, 0.95);
+    }
+}
+
+.n-tooltip-success {
+    --tooltip-bg-color: rgba(76, 175, 80, 0.95);
+
+    &::after {
+        border-top-color: rgba(76, 175, 80, 0.95);
+    }
+
+    &.n-tooltip-right::after {
+        border-top-color: transparent;
+        border-right-color: rgba(76, 175, 80, 0.95);
+    }
+
+    &.n-tooltip-bottom::after {
+        border-top-color: transparent;
+        border-bottom-color: rgba(76, 175, 80, 0.95);
+    }
+
+    &.n-tooltip-left::after {
+        border-top-color: transparent;
+        border-left-color: rgba(76, 175, 80, 0.95);
+    }
+
+    .n-tooltip-icon {
+        color: rgba(255, 255, 255, 0.95);
+    }
+}
+
+.n-tooltip-warn {
+    --tooltip-bg-color: rgba(255, 152, 0, 0.95);
+
+    &::after {
+        border-top-color: rgba(255, 152, 0, 0.95);
+    }
+
+    &.n-tooltip-right::after {
+        border-top-color: transparent;
+        border-right-color: rgba(255, 152, 0, 0.95);
+    }
+
+    &.n-tooltip-bottom::after {
+        border-top-color: transparent;
+        border-bottom-color: rgba(255, 152, 0, 0.95);
+    }
+
+    &.n-tooltip-left::after {
+        border-top-color: transparent;
+        border-left-color: rgba(255, 152, 0, 0.95);
+    }
+
+    .n-tooltip-icon {
+        color: rgba(255, 255, 255, 0.95);
+    }
+}
+
+.n-tooltip-error {
+    --tooltip-bg-color: rgba(244, 67, 54, 0.95);
+
+    &::after {
+        border-top-color: rgba(244, 67, 54, 0.95);
+    }
+
+    &.n-tooltip-right::after {
+        border-top-color: transparent;
+        border-right-color: rgba(244, 67, 54, 0.95);
+    }
+
+    &.n-tooltip-bottom::after {
+        border-top-color: transparent;
+        border-bottom-color: rgba(244, 67, 54, 0.95);
+    }
+
+    &.n-tooltip-left::after {
+        border-top-color: transparent;
+        border-left-color: rgba(244, 67, 54, 0.95);
+    }
+
+    .n-tooltip-icon {
+        color: rgba(255, 255, 255, 0.95);
     }
 }
 
@@ -312,6 +485,12 @@ app-notification {
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
     --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.15);
+
+    .n-tooltip {
+        --tooltip-bg-color: rgba(40, 40, 60, 0.95);
+        --tooltip-text-color: #ffffff;
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
 
     .notification-container {
         background: #ffffff;
