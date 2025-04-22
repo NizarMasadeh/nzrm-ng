@@ -1,6 +1,6 @@
 {
   "name": "nzrm-ng",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "peerDependencies": {
     "@angular/common": "^19.0.0",
     "@angular/core": "^19.0.0"

@@ -13,14 +13,37 @@ export class ButtonDirective implements OnInit, OnChanges {
     @Input() label: string = '';
     @Input() outlined: boolean = false;
     @Input() rounded: boolean = false;
-    @Input() disabled: boolean = false;
+    @Input()
+    get disabled(): boolean {
+        return this._disabled;
+    }
+    set disabled(value: boolean) {
+        this._disabled = value;
+        this.updateDisabledState();
+    }
+    private _disabled: boolean = false;
     @Input() icon: string = '';
     @Input() iconPos: 'left' | 'right' = 'left';
-    @Input() loading: boolean = false;
+    @Input()
+    set loading(value: boolean) {
+        if (value) {
+            if (!this.originalLabel) {
+                this.originalLabel = this.label;
+            }
+        } else {
+        }
+        this._loading = value;
+        this.updateDisabledState();
+    }
+    get loading(): boolean {
+        return this._loading;
+    }
+    private _loading: boolean = false;
     @Input() ripple: boolean = true;
 
     private loadingSpinner: HTMLElement | null = null;
     private initialMinWidth: string | null = null;
+    private originalLabel: string | null = null;
 
     @HostListener('click', ['$event'])
     onClick(event: MouseEvent): void {
@@ -46,10 +69,6 @@ export class ButtonDirective implements OnInit, OnChanges {
             this.applyRoundedStyles();
         }
 
-        if (this.disabled) {
-            this.applyDisabledStyles();
-        }
-
         const isIconOnly = this.icon && !this.label;
 
         if (isIconOnly) {
@@ -63,6 +82,23 @@ export class ButtonDirective implements OnInit, OnChanges {
         }
 
         this.addRippleStyles();
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'disabled') {
+                    const nativeDisabled = this.el.nativeElement.hasAttribute('disabled');
+                    if (nativeDisabled !== this._disabled) {
+                        this._disabled = nativeDisabled;
+                        this.updateDisabledState();
+                    }
+                }
+            });
+        });
+
+        observer.observe(this.el.nativeElement, {
+            attributes: true,
+            attributeFilter: ['disabled']
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -72,6 +108,9 @@ export class ButtonDirective implements OnInit, OnChanges {
             } else {
                 this.removeLoadingState();
             }
+        }
+        if (changes['disabled']) {
+            this.updateDisabledState();
         }
     }
 
@@ -310,11 +349,26 @@ export class ButtonDirective implements OnInit, OnChanges {
         this.renderer.setStyle(this.el.nativeElement, 'border-radius', '50px');
     }
 
+    private updateDisabledState(): void {
+        if (this._disabled || this.loading) {
+            this.applyDisabledStyles();
+        } else {
+            this.removeDisabledStyles();
+        }
+    }
+
     private applyDisabledStyles(): void {
         this.renderer.setProperty(this.el.nativeElement, 'disabled', true);
         this.renderer.setStyle(this.el.nativeElement, 'opacity', '0.6');
         this.renderer.setStyle(this.el.nativeElement, 'cursor', 'not-allowed');
         this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'none');
+    }
+
+    private removeDisabledStyles(): void {
+        this.renderer.removeAttribute(this.el.nativeElement, 'disabled');
+        this.renderer.removeStyle(this.el.nativeElement, 'opacity');
+        this.renderer.setStyle(this.el.nativeElement, 'cursor', 'pointer');
+        this.renderer.removeStyle(this.el.nativeElement, 'pointer-events');
     }
 
     private applyIconOnlyStyles(): void {
