@@ -33,12 +33,14 @@ export class InputTextDirective implements OnInit {
     @Input() invalid: boolean = false;
     @Input() helpText?: string;
     @Input() errorText?: string;
+    @Input() iconClickable: boolean = false;
 
     @Output() valueChange = new EventEmitter<string>();
     @Output() focusEvent = new EventEmitter<FocusEvent>();
     @Output() blurEvent = new EventEmitter<FocusEvent>();
     @Output() keydown = new EventEmitter<KeyboardEvent>();
     @Output() keyup = new EventEmitter<KeyboardEvent>();
+    @Output() iconClick = new EventEmitter<void>();
 
     private inputElement!: HTMLInputElement;
     private wrapperElement!: HTMLDivElement;
@@ -49,7 +51,7 @@ export class InputTextDirective implements OnInit {
     private isFocused: boolean = false;
     private initialValue: string = '';
 
-    // Regular expressions for key filtering
+
     private readonly REGEX = {
         int: /^-?\d*$/,
         num: /^-?\d*\.?\d*$/,
@@ -90,7 +92,7 @@ export class InputTextDirective implements OnInit {
             this.renderer.setAttribute(this.inputElement, 'placeholder', '');
         }
 
-        // Create icon if provided
+
         if (this.icon) {
             this.iconElement = this.renderer.createElement('i');
             const iconClasses = this.icon.split(' ');
@@ -190,7 +192,7 @@ export class InputTextDirective implements OnInit {
         });
 
         const inputStyles = {
-            // 'width': '100%',
+
             'font-family': 'Inter, sans-serif',
             'background-color': 'var(--bg-secondary)',
             'color': 'var(--text-primary)',
@@ -213,18 +215,18 @@ export class InputTextDirective implements OnInit {
 
         switch (this.size) {
             case 'sm':
-                padding = this.icon ? (this.iconPos === 'left' ? '0.5rem 0.75rem 0.5rem 2rem' : '0.5rem 2rem 0.5rem 0.75rem') : '0.5rem 0.75rem';
+                padding = this.icon ? (this.iconPos === 'left' ? '0.5rem 0.75rem 0.5rem 2.5rem' : '0.5rem 2.5rem 0.5rem 0.75rem') : '0.5rem 0.75rem';
                 fontSize = '0.75rem';
                 height = '32px';
                 break;
             case 'lg':
-                padding = this.icon ? (this.iconPos === 'left' ? '0.75rem 1.5rem 0.75rem 3rem' : '0.75rem 3rem 0.75rem 1.5rem') : '0.75rem 1.5rem';
+                padding = this.icon ? (this.iconPos === 'left' ? '0.75rem 1.5rem 0.75rem 3.5rem' : '0.75rem 3.5rem 0.75rem 1.5rem') : '0.75rem 1.5rem';
                 fontSize = '1rem';
                 height = '48px';
                 break;
             case 'md':
             default:
-                padding = this.icon ? (this.iconPos === 'left' ? '0.625rem 1.25rem 0.625rem 2.5rem' : '0.625rem 2.5rem 0.625rem 1.25rem') : '0.625rem 1.25rem';
+                padding = this.icon ? (this.iconPos === 'left' ? '0.625rem 1.25rem 0.625rem 3rem' : '0.625rem 3rem 0.625rem 1.25rem') : '0.625rem 1.25rem';
                 fontSize = '0.875rem';
                 height = '40px';
         }
@@ -233,24 +235,7 @@ export class InputTextDirective implements OnInit {
         this.renderer.setStyle(this.inputElement, 'font-size', fontSize);
         this.renderer.setStyle(this.inputElement, 'height', height);
 
-        if (this.iconElement) {
-            const iconStyles = {
-                'position': 'absolute',
-                'color': 'var(--text-secondary)',
-                'font-size': this.size === 'sm' ? '0.875rem' : (this.size === 'lg' ? '1.25rem' : '1rem'),
-                'pointer-events': 'none',
-            };
-
-            Object.entries(iconStyles).forEach(([property, value]) => {
-                this.renderer.setStyle(this.iconElement!, property, value);
-            });
-
-            if (this.iconPos === 'left') {
-                this.renderer.setStyle(this.iconElement, 'left', this.size === 'sm' ? '0.75rem' : (this.size === 'lg' ? '1.25rem' : '1rem'));
-            } else {
-                this.renderer.setStyle(this.iconElement, 'right', this.size === 'sm' ? '0.75rem' : (this.size === 'lg' ? '1.25rem' : '1rem'));
-            }
-        }
+        this.addIconStyles();
 
         if (this.labelElement) {
             const labelStyles = {
@@ -333,6 +318,56 @@ export class InputTextDirective implements OnInit {
 
             if (this.errorTextElement) {
                 this.renderer.setStyle(this.errorTextElement, 'display', 'block');
+            }
+        }
+    }
+
+    private addIconStyles(): void {
+        if (this.iconElement) {
+            const iconStyles = {
+                'position': 'absolute',
+                'color': 'var(--text-secondary)',
+                'font-size': this.size === 'sm' ? '0.875rem' : (this.size === 'lg' ? '1.25rem' : '1rem'),
+                'pointer-events': this.iconClickable ? 'auto' : 'none',
+                'cursor': this.iconClickable ? 'pointer' : 'default',
+                'transition': 'all 0.2s ease-in-out',
+                'width': '24px',
+                'height': '24px',
+                'display': 'flex',
+                'align-items': 'center',
+                'justify-content': 'center',
+                'border-radius': '50%',
+                'padding': '4px'
+            };
+
+            Object.entries(iconStyles).forEach(([property, value]) => {
+                this.renderer.setStyle(this.iconElement!, property, value);
+            });
+
+            if (this.iconPos === 'left') {
+                this.renderer.setStyle(this.iconElement, 'left', this.size === 'sm' ? '0.75rem' : (this.size === 'lg' ? '1.25rem' : '.3rem'));
+            } else {
+                this.renderer.setStyle(this.iconElement, 'right', this.size === 'sm' ? '0.75rem' : (this.size === 'lg' ? '1.25rem' : '.3rem'));
+            }
+
+
+            if (this.iconClickable) {
+                this.renderer.listen(this.iconElement, 'mouseenter', () => {
+                    this.renderer.setStyle(this.iconElement, 'color', 'var(--brand-primary)');
+                    this.renderer.setStyle(this.iconElement, 'background', 'var(--border-color)');
+                });
+
+                this.renderer.listen(this.iconElement, 'mouseleave', () => {
+                    this.renderer.setStyle(this.iconElement, 'color', 'var(--text-secondary)');
+                    this.renderer.setStyle(this.iconElement, 'background', 'transparent');
+                });
+
+                this.renderer.listen(this.iconElement, 'click', (event: Event) => {
+                    event.stopPropagation();
+                    if (!this.disabled && !this.readonly) {
+                        this.iconClick.emit();
+                    }
+                });
             }
         }
     }
@@ -437,7 +472,7 @@ export class InputTextDirective implements OnInit {
     private validateKeyFilter(event: KeyboardEvent): boolean {
         const char = event.key;
 
-        // Allow control keys
+
         if (event.ctrlKey || event.altKey || event.metaKey ||
             char === 'Backspace' || char === 'Delete' ||
             char === 'ArrowLeft' || char === 'ArrowRight' ||
