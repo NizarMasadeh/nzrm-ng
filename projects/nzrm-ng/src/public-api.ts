@@ -40,5 +40,9 @@ export * from './lib/components/drop-down/drop-down.directive';
 export * from './lib/components/drop-down/drop-down.component';
 export * from './lib/components/drop-down/drop-down.service';
 
+/****SKELETON*****/
+export * from './lib/components/skeleton/skeleton.module';
+export * from './lib/components/skeleton/skeleton.directive';
+
 /****STYLES****/
 export * from './lib/styles/styles.module';

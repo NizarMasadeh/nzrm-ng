@@ -469,6 +469,16 @@ app-notification {
     }
 }
 
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
 .light-theme {
     --bg-primary: #ffffff;
     --bg-secondary: #f5f5f7;
