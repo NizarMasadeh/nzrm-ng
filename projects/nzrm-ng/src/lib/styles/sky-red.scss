@@ -1,0 +1,547 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    scrollbar-color: var(--bg-tertiary) var(--bg-secondary);
+    scrollbar-width: thin;
+}
+
+:root {
+    /* Branding */
+    --primary: #e30613;
+    --primary-dark: #b30510;
+    --primary-light: #ff3b47;
+    --primary-transparent: rgba(227, 6, 19, 0.1);
+
+    /* Backgrounds & Texts */
+    --bg-primary: #1e1e2e;
+    --bg-secondary: #282838;
+    --bg-tertiary: #313142;
+    --text-primary: #e4e4e7;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --border-color: #3f3f51;
+
+    /* Brand override with Sky colors */
+    --brand-primary: var(--primary);
+    --brand-secondary: var(--primary-dark);
+
+    /* Status colors */
+    --success-color: #4ade80;
+    --info-color: #60a5fa;
+    --warn-color: #fbbf24;
+    --error-color: #f87171;
+
+    /* Tooltip */
+    --tooltip-bg-color: rgba(30, 30, 46, 0.95);
+    --tooltip-text-color: #e4e4e7;
+    --tooltip-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --tooltip-border: 1px solid #3f3f51;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+    /* Transitions */
+    --transition-fast: 150ms;
+    --transition-normal: 250ms;
+    --transition-slow: 350ms;
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+    --dark-border: rgba(0, 0, 0, 0.2);
+    --linear-left-to-right: linear-gradient(to right, var(--primary), var(--primary-light));
+}
+
+.light-theme {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f7;
+    --bg-tertiary: #e9e9ec;
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a5a;
+    --text-muted: #71717a;
+    --border-color: #e2e2e7;
+
+    --brand-primary: var(--primary);
+    --brand-secondary: var(--primary-light);
+
+    --success-color: #4CAF50;
+    --info-color: #2196F3;
+    --warn-color: #FF9800;
+    --error-color: #F44336;
+
+    --tooltip-bg-color: rgba(40, 40, 60, 0.95);
+    --tooltip-text-color: #ffffff;
+    --tooltip-border: none;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+
+    .notification-summary,
+    .notification-detail {
+        text-align: right !important;
+    }
+}
+
+.n-tooltip {
+    position: absolute;
+    background-color: var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
+    color: var(--tooltip-text-color, #ffffff);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    z-index: 1000;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(0, 0, 0, 0.4));
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    max-width: 250px;
+
+    &::after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 0;
+        height: 0;
+    }
+
+    &.n-tooltip-visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .n-tooltip-content {
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .n-tooltip-text {
+        line-height: 1.4;
+    }
+
+    .n-tooltip-icon {
+        display: inline-flex;
+        font-size: 16px;
+    }
+}
+
+.n-tooltip-top {
+    transform-origin: bottom center;
+
+    &::after {
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+.n-tooltip-right {
+    transform-origin: left center;
+
+    &::after {
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-right: 6px solid var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
+        left: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.n-tooltip-bottom {
+    transform-origin: top center;
+
+    &::after {
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+.n-tooltip-left {
+    transform-origin: right center;
+
+    &::after {
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 6px solid var(--tooltip-bg-color, rgba(40, 40, 60, 0.95));
+        right: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.n-tooltip-info {
+    --tooltip-bg-color: rgba(33, 150, 243, 0.95);
+
+    &::after {
+        border-top-color: rgba(33, 150, 243, 0.95);
+    }
+
+    &.n-tooltip-right::after {
+        border-top-color: transparent;
+        border-right-color: rgba(33, 150, 243, 0.95);
+    }
+
+    &.n-tooltip-bottom::after {
+        border-top-color: transparent;
+        border-bottom-color: rgba(33, 150, 243, 0.95);
+    }
+
+    &.n-tooltip-left::after {
+        border-top-color: transparent;
+        border-left-color: rgba(33, 150, 243, 0.95);
+    }
+
+    .n-tooltip-icon {
+        color: rgba(255, 255, 255, 0.95);
+    }
+}
+
+.n-tooltip-success {
+    --tooltip-bg-color: rgba(76, 175, 80, 0.95);
+
+    &::after {
+        border-top-color: rgba(76, 175, 80, 0.95);
+    }
+
+    &.n-tooltip-right::after {
+        border-top-color: transparent;
+        border-right-color: rgba(76, 175, 80, 0.95);
+    }
+
+    &.n-tooltip-bottom::after {
+        border-top-color: transparent;
+        border-bottom-color: rgba(76, 175, 80, 0.95);
+    }
+
+    &.n-tooltip-left::after {
+        border-top-color: transparent;
+        border-left-color: rgba(76, 175, 80, 0.95);
+    }
+
+    .n-tooltip-icon {
+        color: rgba(255, 255, 255, 0.95);
+    }
+}
+
+.n-tooltip-warn {
+    --tooltip-bg-color: rgba(255, 152, 0, 0.95);
+
+    &::after {
+        border-top-color: rgba(255, 152, 0, 0.95);
+    }
+
+    &.n-tooltip-right::after {
+        border-top-color: transparent;
+        border-right-color: rgba(255, 152, 0, 0.95);
+    }
+
+    &.n-tooltip-bottom::after {
+        border-top-color: transparent;
+        border-bottom-color: rgba(255, 152, 0, 0.95);
+    }
+
+    &.n-tooltip-left::after {
+        border-top-color: transparent;
+        border-left-color: rgba(255, 152, 0, 0.95);
+    }
+
+    .n-tooltip-icon {
+        color: rgba(255, 255, 255, 0.95);
+    }
+}
+
+.n-tooltip-error {
+    --tooltip-bg-color: rgba(244, 67, 54, 0.95);
+
+    &::after {
+        border-top-color: rgba(244, 67, 54, 0.95);
+    }
+
+    &.n-tooltip-right::after {
+        border-top-color: transparent;
+        border-right-color: rgba(244, 67, 54, 0.95);
+    }
+
+    &.n-tooltip-bottom::after {
+        border-top-color: transparent;
+        border-bottom-color: rgba(244, 67, 54, 0.95);
+    }
+
+    &.n-tooltip-left::after {
+        border-top-color: transparent;
+        border-left-color: rgba(244, 67, 54, 0.95);
+    }
+
+    .n-tooltip-icon {
+        color: rgba(255, 255, 255, 0.95);
+    }
+}
+
+.notification {
+    &-container {
+        display: flex;
+        align-items: flex-start;
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        box-shadow: var(--shadow-md);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        width: 340px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
+    }
+
+    &-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+
+    &-icon-symbol {
+        font-size: 1.25rem;
+    }
+
+    &-content {
+        flex: 1;
+        padding-right: 1.5rem;
+    }
+
+    &-summary {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+        color: var(--text-primary);
+        letter-spacing: 0.2px;
+    }
+
+    &-detail {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+    }
+
+    &-close {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: all 0.2s ease;
+        color: var(--text-secondary);
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+
+        &:hover {
+            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+    }
+
+    &-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        transition: width linear;
+    }
+
+    &-success {
+        color: var(--text-primary);
+        // border-left: 4px solid var(--success-color);
+
+        .notification-icon {
+            background-color: rgba(74, 222, 128, 0.15);
+            color: var(--success-color);
+        }
+
+        .notification-progress {
+            background-color: var(--success-color);
+        }
+    }
+
+    &-info {
+        color: var(--text-primary);
+        // border-left: 4px solid var(--info-color);
+
+        .notification-icon {
+            background-color: rgba(96, 165, 250, 0.15);
+            color: var(--info-color);
+        }
+
+        .notification-progress {
+            background-color: var(--info-color);
+        }
+    }
+
+    &-warn {
+        color: var(--text-primary);
+        // border-left: 4px solid var(--warn-color);
+
+        .notification-icon {
+            background-color: rgba(251, 191, 36, 0.15);
+            color: var(--warn-color);
+        }
+
+        .notification-progress {
+            background-color: var(--warn-color);
+        }
+    }
+
+    &-error {
+        color: var(--text-primary);
+        // border-left: 4px solid var(--error-color);
+
+        .notification-icon {
+            background-color: rgba(248, 113, 113, 0.15);
+            color: var(--error-color);
+        }
+
+        .notification-progress {
+            background-color: var(--error-color);
+        }
+    }
+}
+
+app-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1200;
+    display: block;
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.2s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.light-theme {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f7;
+    --bg-tertiary: #e9e9ec;
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a5a;
+    --text-muted: #71717a;
+    --border-color: #e2e2e7;
+
+    --tooltip-bg-color: rgba(40, 40, 60, 0.95);
+    --tooltip-text-color: #ffffff;
+    --tooltip-border: none;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.15);
+
+    .n-tooltip {
+        --tooltip-text-color: #ffffff;
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .notification-container {
+        background: #ffffff;
+        border: 1px solid var(--border-color);
+    }
+
+    .notification-summary {
+        color: var(--text-primary);
+    }
+
+    .notification-detail {
+        color: var(--text-secondary);
+    }
+
+    .notification-close {
+        color: var(--text-secondary);
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--text-primary);
+        }
+    }
+}
