@@ -6,13 +6,14 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation,
   Inject,
+  DOCUMENT
 } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { Subscription } from "rxjs"
 import { trigger, transition, style, animate, AnimationEvent } from "@angular/animations"
 import { ConfirmationDialogService } from "./confirmation-dialog.service"
 import { ConfirmationDialogConfig, DialogSeverity } from "./confirmation-dialog.model"
-import { DOCUMENT } from "@angular/common"
+
 
 @Component({
   selector: "n-confirmation-dialog",

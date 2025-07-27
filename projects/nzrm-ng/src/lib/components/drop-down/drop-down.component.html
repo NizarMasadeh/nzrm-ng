@@ -1,69 +1,94 @@
 <div class="n-dropdown-wrapper" [class.n-dropdown-wrapper-disabled]="disabled"
-    [class.n-dropdown-wrapper-readonly]="readonly">
+  [class.n-dropdown-wrapper-readonly]="readonly">
 
-    <div #dropdownTrigger class="n-dropdown-trigger" [class.n-dropdown-trigger-open]="isOpen"
-        [class.n-dropdown-has-icon-left]="icon && iconPos === 'left'"
-        [class.n-dropdown-has-icon-right]="icon && iconPos === 'right'" [class.n-dropdown-invalid]="invalid"
-        [class.n-dropdown-readonly]="readonly" [class.n-dropdown-sm]="size === 'sm'"
-        [class.n-dropdown-md]="size === 'md'" [class.n-dropdown-lg]="size === 'lg'" [attr.aria-disabled]="disabled"
-        [attr.aria-expanded]="isOpen" [attr.aria-controls]="'dropdown-panel-' + uniqueId" role="combobox"
-        (click)="toggleDropdown($event)">
+  <div #dropdownTrigger class="n-dropdown-trigger" [class.n-dropdown-trigger-open]="isOpen"
+    [class.n-dropdown-has-icon-left]="icon && iconPos === 'left'"
+    [class.n-dropdown-has-icon-right]="icon && iconPos === 'right'" [class.n-dropdown-invalid]="invalid"
+    [class.n-dropdown-readonly]="readonly" [class.n-dropdown-sm]="size === 'sm'"
+    [class.n-dropdown-md]="size === 'md'" [class.n-dropdown-lg]="size === 'lg'" [attr.aria-disabled]="disabled"
+    [attr.aria-expanded]="isOpen" [attr.aria-controls]="'dropdown-panel-' + uniqueId" role="combobox"
+    (click)="toggleDropdown($event)">
 
-        <i *ngIf="icon && iconPos === 'left'" [class]="icon + ' n-dropdown-icon n-dropdown-icon-left'"></i>
+    @if (icon && iconPos === 'left') {
+      <i [class]="icon + ' n-dropdown-icon n-dropdown-icon-left'"></i>
+    }
 
-        <div class="n-dropdown-value-container">
-            <span *ngIf="!selectedItems.length" class="n-dropdown-placeholder">{{placeholder}}</span>
-            <div *ngIf="selectedItems.length" class="n-dropdown-selected-items">
-                <div *ngFor="let item of selectedItems | slice:0:maxSelectedLabels" class="n-dropdown-chip">
-                    {{getItemLabel(item)}}
-                    <span *ngIf="showClear" class="n-dropdown-chip-remove" (click)="removeItem($event, item)">×</span>
-                </div>
-                <div *ngIf="selectedItems.length > maxSelectedLabels" class="n-dropdown-chip">
-                    +{{selectedItems.length - maxSelectedLabels}} more
-                </div>
+    <div class="n-dropdown-value-container">
+      @if (!selectedItems.length) {
+        <span class="n-dropdown-placeholder">{{placeholder}}</span>
+      }
+      @if (selectedItems.length) {
+        <div class="n-dropdown-selected-items">
+          @for (item of selectedItems | slice:0:maxSelectedLabels; track item) {
+            <div class="n-dropdown-chip">
+              {{getItemLabel(item)}}
+              @if (showClear) {
+                <span class="n-dropdown-chip-remove" (click)="removeItem($event, item)">×</span>
+              }
             </div>
+          }
+          @if (selectedItems.length > maxSelectedLabels) {
+            <div class="n-dropdown-chip">
+              +{{selectedItems.length - maxSelectedLabels}} more
+            </div>
+          }
         </div>
-
-        <i class="n-dropdown-arrow" [class.n-dropdown-arrow-up]="isOpen"></i>
+      }
     </div>
 
-    <div #dropdownPanel [id]="'dropdown-panel-' + uniqueId" class="n-dropdown-panel"
-        [@dropdownAnimation]="isOpen ? 'visible' : 'void'" (@dropdownAnimation.start)="onAnimationStart($event)"
-        (@dropdownAnimation.done)="onAnimationDone($event)" [style.display]="isOpen || isAnimating ? 'flex' : 'none'"
-        [class.n-dropdown-panel-open]="isOpen || isAnimating" role="listbox" [attr.aria-multiselectable]="multiSelect">
+    <i class="n-dropdown-arrow" [class.n-dropdown-arrow-up]="isOpen"></i>
+  </div>
 
-        <div *ngIf="filterable" class="n-dropdown-filter-container">
-            <input #filterInput type="text" class="n-dropdown-filter" [placeholder]="filterPlaceholder"
-                (input)="onFilterChange($event)" (click)="$event.stopPropagation()" role="searchbox"
-                [attr.aria-label]="filterPlaceholder">
+  <div #dropdownPanel [id]="'dropdown-panel-' + uniqueId" class="n-dropdown-panel"
+    [@dropdownAnimation]="isOpen ? 'visible' : 'void'" (@dropdownAnimation.start)="onAnimationStart($event)"
+    (@dropdownAnimation.done)="onAnimationDone($event)" [style.display]="isOpen || isAnimating ? 'flex' : 'none'"
+    [class.n-dropdown-panel-open]="isOpen || isAnimating" role="listbox" [attr.aria-multiselectable]="multiSelect">
+
+    @if (filterable) {
+      <div class="n-dropdown-filter-container">
+        <input #filterInput type="text" class="n-dropdown-filter" [placeholder]="filterPlaceholder"
+          (input)="onFilterChange($event)" (click)="$event.stopPropagation()" role="searchbox"
+          [attr.aria-label]="filterPlaceholder">
+      </div>
+    }
+
+    <div class="n-dropdown-items-wrapper" [class.n-dropdown-items-empty]="filteredItems.length === 0">
+      @if (filteredItems.length === 0) {
+        <div class="n-dropdown-empty-message">
+          {{emptyMessage}}
         </div>
+      }
 
-        <div class="n-dropdown-items-wrapper" [class.n-dropdown-items-empty]="filteredItems.length === 0">
-            <div *ngIf="filteredItems.length === 0" class="n-dropdown-empty-message">
-                {{emptyMessage}}
+      @for (item of filteredItems; track item; let i = $index) {
+        <div #dropdownItem class="n-dropdown-item"
+          [class.n-dropdown-item-selected]="isSelected(item)"
+          [class.n-dropdown-item-disabled]="isItemDisabled(item)" [attr.aria-selected]="isSelected(item)"
+          [attr.aria-disabled]="isItemDisabled(item)" role="option" (click)="onItemClick($event, item)"
+          (mousedown)="addRippleEffect($event, dropdownItem)">
+          @if (multiSelect) {
+            <div class="n-dropdown-checkbox">
+              <div class="n-dropdown-checkbox-box" [class.n-dropdown-checkbox-checked]="isSelected(item)">
+                @if (isSelected(item)) {
+                  <i class="n-dropdown-checkbox-icon">✓</i>
+                }
+              </div>
             </div>
-
-            <div *ngFor="let item of filteredItems; let i = index" #dropdownItem class="n-dropdown-item"
-                [class.n-dropdown-item-selected]="isSelected(item)"
-                [class.n-dropdown-item-disabled]="isItemDisabled(item)" [attr.aria-selected]="isSelected(item)"
-                [attr.aria-disabled]="isItemDisabled(item)" role="option" (click)="onItemClick($event, item)"
-                (mousedown)="addRippleEffect($event, dropdownItem)">
-
-                <div *ngIf="multiSelect" class="n-dropdown-checkbox">
-                    <div class="n-dropdown-checkbox-box" [class.n-dropdown-checkbox-checked]="isSelected(item)">
-                        <i *ngIf="isSelected(item)" class="n-dropdown-checkbox-icon">✓</i>
-                    </div>
-                </div>
-
-                <span class="n-dropdown-item-label">{{getItemLabel(item)}}</span>
-
-                <span *ngIf="isSelected(item) && !multiSelect" class="n-dropdown-item-check">
-                    <i class="pi pi-check"></i>
-                </span>
-            </div>
+          }
+          <span class="n-dropdown-item-label">{{getItemLabel(item)}}</span>
+          @if (isSelected(item) && !multiSelect) {
+            <span class="n-dropdown-item-check">
+              <i class="pi pi-check"></i>
+            </span>
+          }
         </div>
+      }
     </div>
+  </div>
 </div>
 
-<div *ngIf="helpText" class="n-dropdown-help-text">{{ helpText }}</div>
-<div *ngIf="errorText && invalid" class="n-dropdown-error-text">{{ errorText }}</div>
+@if (helpText) {
+  <div class="n-dropdown-help-text">{{ helpText }}</div>
+}
+@if (errorText && invalid) {
+  <div class="n-dropdown-error-text">{{ errorText }}</div>
+}

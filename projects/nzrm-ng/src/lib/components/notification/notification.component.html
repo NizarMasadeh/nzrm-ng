@@ -1,12 +1,16 @@
-<div *ngIf="visible" class="notification-container" [ngClass]="'notification-' + message?.severity"
+@if (visible) {
+  <div class="notification-container" [ngClass]="'notification-' + message?.severity"
     [@notificationAnimation]="animationState">
     <div class="notification-icon">
-        <i class="notification-icon-symbol" [ngClass]="getIconClass()"></i>
+      <i class="notification-icon-symbol" [ngClass]="getIconClass()"></i>
     </div>
     <div class="notification-content">
-        <div class="notification-summary">{{ message?.summary }}</div>
-        <div class="notification-detail">{{ message?.detail }}</div>
+      <div class="notification-summary">{{ message?.summary }}</div>
+      <div class="notification-detail">{{ message?.detail }}</div>
     </div>
     <button class="notification-close" (click)="hide()">×</button>
-    <div *ngIf="showProgressBar" class="notification-progress" [style.width.%]="progressWidth"></div>
-</div>
+    @if (showProgressBar) {
+      <div class="notification-progress" [style.width.%]="progressWidth"></div>
+    }
+  </div>
+}
