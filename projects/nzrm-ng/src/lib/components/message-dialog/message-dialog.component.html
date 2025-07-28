@@ -1,21 +1,19 @@
-@if (visible) {
-  <div class="message-dialog-overlay" (click)="onBackdropClick()" [@overlayAnimation]>
-    <div class="message-dialog-container" (click)="stopPropagation($event)" [@dialogAnimation]
-      (@dialogAnimation.start)="onAnimationStart($event)" (@dialogAnimation.done)="onAnimationDone($event)">
-      <div class="message-dialog-header" [ngClass]="'message-dialog-' + (config?.severity || 'info')">
-        <div class="message-dialog-icon">
-          <i [class]="getIconClass(config?.severity)"></i>
-        </div>
-        <h2 class="message-dialog-title">{{ config?.title }}</h2>
-        @if (config?.showCloseButton) {
-          <button class="message-dialog-close" (click)="close()" aria-label="Close">
-            <i class="pi pi-times"></i>
-          </button>
-        }
+<div *ngIf="visible" class="message-dialog-overlay" (click)="onBackdropClick()" [@overlayAnimation]>
+  <div class="message-dialog-container" (click)="stopPropagation($event)" [@dialogAnimation]
+    (@dialogAnimation.start)="onAnimationStart($event)" (@dialogAnimation.done)="onAnimationDone($event)">
+
+    <div class="message-dialog-header" [ngClass]="'message-dialog-' + (config?.severity || 'info')">
+      <div class="message-dialog-icon">
+        <i [class]="getIconClass(config?.severity)"></i>
       </div>
-      <div class="message-dialog-content">
-        <p class="message-dialog-message">{{ config?.message }}</p>
-      </div>
+      <h2 class="message-dialog-title">{{ config?.title }}</h2>
+      <button *ngIf="config?.showCloseButton" class="message-dialog-close" (click)="close()" aria-label="Close">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <div class="message-dialog-content">
+      <p class="message-dialog-message">{{ config?.message }}</p>
     </div>
   </div>
-}
+</div>

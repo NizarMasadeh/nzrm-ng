@@ -6,12 +6,11 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation,
   Inject,
-  DOCUMENT
 } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { Subscription } from "rxjs"
 import { trigger, transition, style, animate, type AnimationEvent } from "@angular/animations"
-
+import { DOCUMENT } from "@angular/common"
 import { MessageDialogConfig, MessageSeverity } from "./message-dialog.model"
 import { MessageDialogService } from "./message-dialog.service"
 
