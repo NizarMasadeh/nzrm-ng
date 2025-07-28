@@ -8,5 +8,5 @@ export interface MessageDialogConfig {
     showCloseButton?: boolean
     closeOnEscape?: boolean
     closeOnBackdropClick?: boolean
+    closable?: boolean
 }
-

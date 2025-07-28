@@ -13,8 +13,6 @@ import { trigger, transition, style, animate, type AnimationEvent } from "@angul
 import { DOCUMENT } from "@angular/common"
 import { MessageDialogConfig, MessageSeverity } from "./message-dialog.model"
 import { MessageDialogService } from "./message-dialog.service"
-
-
 @Component({
   selector: "n-message-dialog",
   standalone: true,
@@ -76,19 +74,19 @@ export class MessageDialogComponent implements OnInit, OnDestroy {
   }
 
   close(): void {
-    if (this.animationInProgress) return
+    if (this.animationInProgress || !this.config?.closable) return
     this.dialogService.close()
   }
 
   @HostListener("document:keydown.escape")
   onEscapeKey(): void {
-    if (this.visible && !this.animationInProgress && this.config?.closeOnEscape) {
+    if (this.visible && !this.animationInProgress && this.config?.closeOnEscape && this.config?.closable) {
       this.close()
     }
   }
 
   onBackdropClick(): void {
-    if (this.config?.closeOnBackdropClick) {
+    if (this.config?.closeOnBackdropClick && this.config?.closable) {
       this.close()
     }
   }
@@ -130,4 +128,3 @@ export class MessageDialogComponent implements OnInit, OnDestroy {
     this.document.body.style.paddingRight = ""
   }
 }
-

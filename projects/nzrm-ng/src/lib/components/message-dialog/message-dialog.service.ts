@@ -24,19 +24,17 @@ export class MessageDialogService {
             this.activeTimeoutId = null
         }
 
-
         const completeConfig: MessageDialogConfig = {
             showCloseButton: true,
             closeOnEscape: true,
             closeOnBackdropClick: true,
+            closable: true,
             duration: 0,
             severity: "info",
             ...config,
         }
 
-
         this.dialogSubject.next(completeConfig)
-
 
         if (completeConfig.duration && completeConfig.duration > 0) {
             this.activeTimeoutId = window.setTimeout(() => {
@@ -47,7 +45,6 @@ export class MessageDialogService {
         return this.close$
     }
 
-
     success(title: string, message: string, options?: Partial<MessageDialogConfig>): Observable<void> {
         return this.show({
             title,
@@ -56,7 +53,6 @@ export class MessageDialogService {
             ...options,
         })
     }
-
 
     info(title: string, message: string, options?: Partial<MessageDialogConfig>): Observable<void> {
         return this.show({
@@ -95,4 +91,3 @@ export class MessageDialogService {
         this.closeSubject.next()
     }
 }
-
