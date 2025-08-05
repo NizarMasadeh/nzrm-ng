@@ -1,4 +1,5 @@
-import { Directive, ElementRef, HostListener, Input, OnInit, OnChanges, SimpleChanges, Renderer2 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Directive, ElementRef, HostListener, Input, OnInit, OnChanges, SimpleChanges, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
 
 type ButtonSeverity = 'primary' | 'secondary' | 'success' | 'info' | 'warn' | 'error';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -8,6 +9,8 @@ type ButtonSize = 'sm' | 'md' | 'lg';
     standalone: true,
 })
 export class ButtonDirective implements OnInit, OnChanges {
+    private isBrowser: boolean;
+
     @Input() severity: ButtonSeverity = 'primary';
     @Input() size: ButtonSize = 'md';
     @Input() label: string = '';
@@ -47,74 +50,86 @@ export class ButtonDirective implements OnInit, OnChanges {
 
     @HostListener('click', ['$event'])
     onClick(event: MouseEvent): void {
-        if (this.disabled || !this.ripple) return;
+        if (!this.isBrowser || this.disabled || !this.ripple) return;
 
         this.createRippleEffect(event);
     }
 
-    constructor(private el: ElementRef, private renderer: Renderer2) { }
+    constructor(
+        @Inject(PLATFORM_ID) platformId: Object,
+        private el: ElementRef,
+        private renderer: Renderer2
+    ) {
+        this.isBrowser = isPlatformBrowser(platformId)
+    }
 
     ngOnInit(): void {
-        this.applyBaseStyles();
-        this.applySeverityStyles();
-        this.applySizeStyles();
+        if (this.isBrowser) {
+            this.applyBaseStyles();
+            this.applySeverityStyles();
+            this.applySizeStyles();
 
-        this.initialMinWidth = this.getMinWidth();
+            this.initialMinWidth = this.getMinWidth();
 
-        if (this.outlined) {
-            this.applyOutlinedStyles();
-        }
+            if (this.outlined) {
+                this.applyOutlinedStyles();
+            }
 
-        if (this.rounded) {
-            this.applyRoundedStyles();
-        }
+            if (this.rounded) {
+                this.applyRoundedStyles();
+            }
 
-        const isIconOnly = this.icon && !this.label;
+            const isIconOnly = this.icon && !this.label;
 
-        if (isIconOnly) {
-            this.applyIconOnlyStyles();
-        }
+            if (isIconOnly) {
+                this.applyIconOnlyStyles();
+            }
 
-        this.addButtonContent();
+            this.addButtonContent();
 
-        if (this.loading) {
-            this.applyLoadingState();
-        }
+            if (this.loading) {
+                this.applyLoadingState();
+            }
 
-        this.addRippleStyles();
+            this.addRippleStyles();
 
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'disabled') {
-                    const nativeDisabled = this.el.nativeElement.hasAttribute('disabled');
-                    if (nativeDisabled !== this._disabled) {
-                        this._disabled = nativeDisabled;
-                        this.updateDisabledState();
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'disabled') {
+                        const nativeDisabled = this.el.nativeElement.hasAttribute('disabled');
+                        if (nativeDisabled !== this._disabled) {
+                            this._disabled = nativeDisabled;
+                            this.updateDisabledState();
+                        }
                     }
-                }
+                });
             });
-        });
 
-        observer.observe(this.el.nativeElement, {
-            attributes: true,
-            attributeFilter: ['disabled']
-        });
+            observer.observe(this.el.nativeElement, {
+                attributes: true,
+                attributeFilter: ['disabled']
+            });
+        }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['loading']) {
-            if (changes['loading'].currentValue) {
-                this.applyLoadingState();
-            } else {
-                this.removeLoadingState();
+        if (this.isBrowser) {
+            if (changes['loading']) {
+                if (changes['loading'].currentValue) {
+                    this.applyLoadingState();
+                } else {
+                    this.removeLoadingState();
+                }
             }
-        }
-        if (changes['disabled']) {
-            this.updateDisabledState();
+            if (changes['disabled']) {
+                this.updateDisabledState();
+            }
         }
     }
 
     private createRippleEffect(event: MouseEvent): void {
+        if (!this.isBrowser) return;
+
         const ripple = this.renderer.createElement('span');
         this.renderer.addClass(ripple, 'n-button-ripple');
 
@@ -140,6 +155,8 @@ export class ButtonDirective implements OnInit, OnChanges {
     }
 
     private addRippleStyles(): void {
+        if (!this.isBrowser) return;
+
         if (!document.getElementById('n-button-ripple-style')) {
             const style = this.renderer.createElement('style');
             style.id = 'n-button-ripple-style';
